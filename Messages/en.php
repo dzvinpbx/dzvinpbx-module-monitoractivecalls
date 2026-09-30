@@ -51,4 +51,5 @@ return [
     'module_monitorCalls_legendTitleCalling' => 'Dialing',
     'module_monitorCalls_noWaitingCalls' => 'No waiting calls',
     'module_monitorCalls_saveQueuesFilter' => 'Apply',
+    'module_monitorCalls_minWaitVisible' => 'Queue, wait time longer than',
 ];
