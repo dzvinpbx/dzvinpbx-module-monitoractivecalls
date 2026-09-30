@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace MikoPBX\Common\Models {
+namespace DzvinPBX\Common\Models {
     final class PbxSettings
     {
         public static function getValueByKey(string $key): string
@@ -12,7 +12,7 @@ namespace MikoPBX\Common\Models {
     }
 }
 
-namespace MikoPBX\Core\System {
+namespace DzvinPBX\Core\System {
     final class SystemMessages
     {
         public static function sysLogMsg(string $tag, string $message, int $level = 0): void
@@ -21,13 +21,13 @@ namespace MikoPBX\Core\System {
     }
 }
 
-namespace MikoPBX\Core\Workers {
+namespace DzvinPBX\Core\Workers {
     class WorkerBase
     {
     }
 }
 
-namespace MikoPBX\PBXCoreREST\Lib {
+namespace DzvinPBX\PBXCoreREST\Lib {
     class PBXApiResult
     {
         public string $processor = '';

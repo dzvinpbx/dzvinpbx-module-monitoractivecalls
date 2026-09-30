@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace MikoPBX\Common\Models {
+namespace DzvinPBX\Common\Models {
     final class PbxExtensionModules
     {
         public static function findFirstByUniqid(string $moduleId): object
@@ -12,7 +12,7 @@ namespace MikoPBX\Common\Models {
     }
 }
 
-namespace MikoPBX\Modules {
+namespace DzvinPBX\Modules {
     class PbxExtensionBase
     {
     }

@@ -26,7 +26,7 @@ final class EndpointStateAmiSession
             if (!is_resource($this->socket)) {
                 throw new RuntimeException('AMI connection failed');
             }
-            // MikoPBX rebrands the AMI banner and drops the version suffix: the greeting is
+            // DzvinPBX rebrands the AMI banner and drops the version suffix: the greeting is
             // "PBX Call Manager" (no "/x.x.x"), not "Asterisk Call Manager/...". Match the
             // brand- and version-independent "Call Manager" substring.
             $greeting = $this->readLine();

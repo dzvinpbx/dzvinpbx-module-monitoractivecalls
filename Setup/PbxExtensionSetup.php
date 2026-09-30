@@ -8,7 +8,7 @@
 
 namespace Modules\ModuleMonitorActiveCalls\Setup;
 
-use MikoPBX\Modules\Setup\PbxExtensionSetupBase;
+use DzvinPBX\Modules\Setup\PbxExtensionSetupBase;
 
 
 /**

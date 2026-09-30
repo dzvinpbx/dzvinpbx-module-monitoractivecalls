@@ -1,6 +1,6 @@
 <?php
 /*
- * MikoPBX - free phone system for small business
+ * Dzvin PBX - free phone system for small business
  * Copyright © 2017-2022 Alexey Portnov and Nikolay Beketov
  *
  * This program is free software: you can redistribute it and/or modify
@@ -20,16 +20,16 @@
 namespace Modules\ModuleMonitorActiveCalls\bin;
 require_once 'Globals.php';
 
-use MikoPBX\Common\Models\PbxSettings;
-use MikoPBX\Core\Asterisk\AsteriskManager;
-use MikoPBX\Core\System\BeanstalkClient;
-use MikoPBX\Core\System\SystemMessages;
-use MikoPBX\Core\System\Util;
-use MikoPBX\Core\Workers\WorkerBase;
-use MikoPBX\PBXCoreREST\Lib\PBXApiResult;
+use DzvinPBX\Common\Models\PbxSettings;
+use DzvinPBX\Core\Asterisk\AsteriskManager;
+use DzvinPBX\Core\System\BeanstalkClient;
+use DzvinPBX\Core\System\SystemMessages;
+use DzvinPBX\Core\System\Util;
+use DzvinPBX\Core\Workers\WorkerBase;
+use DzvinPBX\PBXCoreREST\Lib\PBXApiResult;
 use Modules\ModuleMonitorActiveCalls\Lib\AsteriskManager as CustomAsteriskManager;
 use Modules\ModuleMonitorActiveCalls\Lib\Logger;
-use Modules\ModuleMonitorActiveCalls\Lib\MikoPBXVersion;
+use Modules\ModuleMonitorActiveCalls\Lib\DzvinPBXVersion;
 use Modules\ModuleMonitorActiveCalls\Lib\MonitorActiveCallsConf;
 
 class WorkerAmiActions extends WorkerBase
@@ -242,7 +242,7 @@ class WorkerAmiActions extends WorkerBase
         }
         $downloadCacheDir = '/tmp/';
         $tmpDir = '/tmp/';
-        $di = MikoPBXVersion::getDefaultDi();
+        $di = DzvinPBXVersion::getDefaultDi();
         if ($di) {
             $dirsConfig = $di->getShared('config');
             $tmoDirName = $dirsConfig->path('core.tempDir') . '/WorkerAmiActions';
@@ -272,7 +272,7 @@ class WorkerAmiActions extends WorkerBase
     }
 
     /**
-     * Выполнение метода API через свойство worker $this->AmoCrmMain
+     * Выполнение метода API через свойство worker $this->ActiveCallsMain
      * Метод следует вызывать при работе с API из прочих процессов.
      * @param $function
      * @param $args

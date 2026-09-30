@@ -2,10 +2,10 @@
 
 declare(strict_types=1);
 
-require_once dirname(__DIR__, 3) . '/mikopbx/Core/vendor/autoload.php';
+require_once dirname(__DIR__, 3) . '/dzvinpbx/Core/vendor/autoload.php';
 require_once dirname(__DIR__) . '/Lib/AsteriskManager.php';
 
-use MikoPBX\Core\Asterisk\AsteriskManager as CoreAsteriskManager;
+use DzvinPBX\Core\Asterisk\AsteriskManager as CoreAsteriskManager;
 use Modules\ModuleMonitorActiveCalls\Lib\AsteriskManager;
 
 if (!is_subclass_of(AsteriskManager::class, CoreAsteriskManager::class)) {

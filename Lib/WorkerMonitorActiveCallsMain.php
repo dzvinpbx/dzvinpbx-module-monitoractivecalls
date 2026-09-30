@@ -2,10 +2,10 @@
 namespace Modules\ModuleMonitorActiveCalls\Lib;
 
 
-use MikoPBX\Core\System\BeanstalkClient;
-use MikoPBX\Core\System\Util;
+use DzvinPBX\Core\System\BeanstalkClient;
+use DzvinPBX\Core\System\Util;
 use Error;
-use MikoPBX\Core\Workers\WorkerBase;
+use DzvinPBX\Core\Workers\WorkerBase;
 
 require_once 'Globals.php';
 

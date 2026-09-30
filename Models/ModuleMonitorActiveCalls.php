@@ -13,8 +13,8 @@
 
 namespace Modules\ModuleMonitorActiveCalls\Models;
 
-use MikoPBX\Common\Models\Providers;
-use MikoPBX\Modules\Models\ModulesModelsBase;
+use DzvinPBX\Common\Models\Providers;
+use DzvinPBX\Modules\Models\ModulesModelsBase;
 use Phalcon\Mvc\Model\Relation;
 
 class ModuleMonitorActiveCalls extends ModulesModelsBase
@@ -84,7 +84,7 @@ class ModuleMonitorActiveCalls extends ModulesModelsBase
 
     /**
      * Returns dynamic relations between module models and common models
-     * MikoPBX check it in ModelsBase after every call to keep data consistent
+     * DzvinPBX check it in ModelsBase after every call to keep data consistent
      *
      * There is example to describe the relation between Providers and ModuleMonitorActiveCalls models
      *

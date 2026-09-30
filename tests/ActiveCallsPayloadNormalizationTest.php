@@ -2,13 +2,13 @@
 
 declare(strict_types=1);
 
-namespace MikoPBX\Common\Models {
+namespace DzvinPBX\Common\Models {
     final class PbxExtensionModules
     {
     }
 }
 
-namespace MikoPBX\Modules {
+namespace DzvinPBX\Modules {
     class PbxExtensionBase
     {
     }

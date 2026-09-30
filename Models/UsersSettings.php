@@ -13,7 +13,7 @@
 
 namespace Modules\ModuleMonitorActiveCalls\Models;
 
-use MikoPBX\Modules\Models\ModulesModelsBase;
+use DzvinPBX\Modules\Models\ModulesModelsBase;
 
 class UsersSettings extends ModulesModelsBase
 {

@@ -6,14 +6,14 @@
  * Written by Alexey Portnov, 11 2018
  */
 namespace Modules\ModuleMonitorActiveCalls\App\Controllers;
-use MikoPBX\AdminCabinet\Controllers\BaseController;
-use MikoPBX\AdminCabinet\Controllers\SessionController;
-use MikoPBX\Common\Models\Extensions;
-use MikoPBX\Common\Models\PbxExtensionModules;
-use MikoPBX\Common\Providers\PBXConfModulesProvider;
-use MikoPBX\Common\Providers\SessionProvider;
-use MikoPBX\Modules\Config\CDRConfigInterface;
-use MikoPBX\Modules\PbxExtensionUtils;
+use DzvinPBX\AdminCabinet\Controllers\BaseController;
+use DzvinPBX\AdminCabinet\Controllers\SessionController;
+use DzvinPBX\Common\Models\Extensions;
+use DzvinPBX\Common\Models\PbxExtensionModules;
+use DzvinPBX\Common\Providers\PBXConfModulesProvider;
+use DzvinPBX\Common\Providers\SessionProvider;
+use DzvinPBX\Modules\Config\CDRConfigInterface;
+use DzvinPBX\Modules\PbxExtensionUtils;
 use Modules\ModuleMonitorActiveCalls\App\Forms\ModuleMonitorActiveCallsForm;
 use Modules\ModuleMonitorActiveCalls\bin\WorkerAmiActions;
 use Modules\ModuleMonitorActiveCalls\Lib\CacheManager;

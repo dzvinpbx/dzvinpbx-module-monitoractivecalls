@@ -5,15 +5,15 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 ## КРИТИЧЕСКИ ВАЖНО: Запреты при разработке
 
 **КАТЕГОРИЧЕСКИ ЗАПРЕЩЕНО:**
-1. **Изменять файлы вне директории модуля** - никогда не модифицировать файлы в `/offload/`, `/usr/www/src/`, или других системных директориях MikoPBX
-2. **Использовать rsync, cp -r или tar для установки модуля** - это может перезаписать системные файлы MikoPBX
+1. **Изменять файлы вне директории модуля** - никогда не модифицировать файлы в `/offload/`, `/usr/www/src/`, или других системных директориях DzvinPBX
+2. **Использовать rsync, cp -r или tar для установки модуля** - это может перезаписать системные файлы DzvinPBX
 3. **Удалять директорию модуля целиком** (`rm -rf /storage/.../ModuleMonitorActiveCalls`) - это удалит базу данных модуля
 
 ## Требования к коду
 
 **Совместимость:**
 - Код должен быть совместим с **PHP 7.4** и **PHP 8.x**
-- Код должен работать с **Phalcon 4.x** и **Phalcon 5.x** (используйте `MikoPBXVersion`)
+- Код должен работать с **Phalcon 4.x** и **Phalcon 5.x** (используйте `DzvinPBXVersion`)
 
 **Избегайте (только PHP 8+):**
 - `match` выражения → используйте `switch`
@@ -25,7 +25,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Project Overview
 
-ModuleMonitorActiveCalls is a PHP module for MikoPBX (Asterisk-based VoIP PBX) that monitors active calls and enables supervisors to perform real-time call actions (listen, whisper, barge-in, hangup).
+ModuleMonitorActiveCalls is a PHP module for DzvinPBX (Asterisk-based VoIP PBX) that monitors active calls and enables supervisors to perform real-time call actions (listen, whisper, barge-in, hangup).
 
 **Stack:** PHP 7.4.6+, Phalcon MVC framework, Redis cache, Asterisk AMI, Vue.js frontend
 
@@ -34,7 +34,7 @@ ModuleMonitorActiveCalls is a PHP module for MikoPBX (Asterisk-based VoIP PBX) t
 ### Сборка архива (локально)
 
 ```bash
-cd /Volumes/DevDisk/apor/Developement/MikoPBX/Extensions/ModuleMonitorActiveCalls
+cd /Volumes/DevDisk/apor/Developement/DzvinPBX/Extensions/ModuleMonitorActiveCalls
 zip -r ../ModuleMonitorActiveCalls.zip . -x "*.git*" -x "*tasks.md*" -x "*.DS_Store*" -x "*CLAUDE.md*"
 ```
 
@@ -50,7 +50,7 @@ scp ../ModuleMonitorActiveCalls.zip user@server:/home/user/
 # На сервере: создать settings.json
 cat > /tmp/settings.json << 'EOF'
 {
-    "currentModuleDir": "/storage/usbdisk1/mikopbx/custom_modules/ModuleMonitorActiveCalls",
+    "currentModuleDir": "/storage/usbdisk1/dzvinpbx/custom_modules/ModuleMonitorActiveCalls",
     "filePath": "/home/user/ModuleMonitorActiveCalls.zip",
     "uniqid": "ModuleMonitorActiveCalls"
 }
@@ -63,7 +63,7 @@ php -f /usr/www/src/PBXCoreREST/Workers/WorkerModuleInstaller.php start /tmp/set
 ### Быстрая команда (всё в одном)
 
 ```bash
-cd /Volumes/DevDisk/apor/Developement/MikoPBX/Extensions/ModuleMonitorActiveCalls && \
+cd /Volumes/DevDisk/apor/Developement/DzvinPBX/Extensions/ModuleMonitorActiveCalls && \
 zip -r ../ModuleMonitorActiveCalls.zip . -x "*.git*" -x "*tasks.md*" -x "*.DS_Store*" -x "*CLAUDE.md*" && \
 scp ../ModuleMonitorActiveCalls.zip user@server:/home/user/ && \
 ssh user@server 'php -f /usr/www/src/PBXCoreREST/Workers/WorkerModuleInstaller.php start /tmp/settings.json'
@@ -107,13 +107,13 @@ ln -sf /usr/www/src/Core/Config/Globals.php /storage/.../ModuleMonitorActiveCall
 
 ### Worker Health Check (State-file подход)
 
-WorkerActiveCalls использует **собственный механизм контроля здоровья** вместо стандартного `CHECK_BY_AMI` из MikoPBX core.
+WorkerActiveCalls использует **собственный механизм контроля здоровья** вместо стандартного `CHECK_BY_AMI` из DzvinPBX core.
 
 **Проблема CHECK_BY_AMI:** WorkerSafeScriptsCore пингует воркер через AMI UserEvent и ожидает pong. Во время тяжёлой инициализации (`collectActiveChannels` делает 7-8 AMI GetVar на каждый активный канал) воркер не находится в event loop и не может ответить на ping. Safe scripts считают воркер зависшим и отправляют SIGUSR1 (restart). Новый воркер тоже не успевает ответить на ping во время init — бесконечный цикл рестартов каждые ~3 минуты.
 
 **Решение — state-file + idle callback:**
 
-1. **Тип проверки:** `CHECK_BY_PID_NOT_ALERT` — MikoPBX core только проверяет PID, не пингует через AMI
+1. **Тип проверки:** `CHECK_BY_PID_NOT_ALERT` — DzvinPBX core только проверяет PID, не пингует через AMI
 2. **State-файл** (`/tmp/MonitorActiveCalls_worker.state`):
    ```json
    {"pid": 12345, "ts": 1738610800, "status": "running"}
@@ -183,14 +183,14 @@ AMI user `monitor-active-calls` is auto-generated with limited permissions (read
 
 | Path | Description |
 |------|-------------|
-| `/storage/usbdisk1/mikopbx/custom_modules/ModuleMonitorActiveCalls/` | Module directory |
-| `/storage/usbdisk1/mikopbx/custom_modules/ModuleMonitorActiveCalls/db/module.db` | SQLite database |
-| `/storage/usbdisk1/mikopbx/logs/ModuleMonitorActiveCalls/` | Log files |
-| `/usr/www/src/Core/Config/Globals.php` | MikoPBX bootstrap |
+| `/storage/usbdisk1/dzvinpbx/custom_modules/ModuleMonitorActiveCalls/` | Module directory |
+| `/storage/usbdisk1/dzvinpbx/custom_modules/ModuleMonitorActiveCalls/db/module.db` | SQLite database |
+| `/storage/usbdisk1/dzvinpbx/logs/ModuleMonitorActiveCalls/` | Log files |
+| `/usr/www/src/Core/Config/Globals.php` | DzvinPBX bootstrap |
 
 ## Совместимость с Phalcon
 
-Используйте `MikoPBXVersion` для кросс-версионной совместимости:
+Используйте `DzvinPBXVersion` для кросс-версионной совместимости:
 
 | Метод | Phalcon 4 | Phalcon 5 |
 |-------|-----------|-----------|
@@ -204,7 +204,7 @@ AMI user `monitor-active-calls` is auto-generated with limited permissions (read
 
 ## Dependencies
 
-- **Required:** MikoPBX >= 2024.1.114
+- **Required:** DzvinPBX >= 2024.1.114
 - **Optional:** ModuleUsersUI (access control), ModuleSoftphoneBackend (contact names)
 - **PHP:** cesargb/php-log-rotation 2.6.0
 
@@ -216,18 +216,18 @@ Source files are in `public/assets/js/src/`. After modifying them, compiled file
 
 Build process uses Babel via PHPStorm File Watcher:
 - See setup: https://docs.mikopbx.com/mikopbx-development/prepare-ide-tools/mac#phpstorm-setup-babel
-- Babel path: `/Users/apor/Developement/MikoPBX/MikoPBXUtils/node_modules/.bin/babel`
+- Babel path: `/Users/apor/Developement/DzvinPBX/DzvinPBXUtils/node_modules/.bin/babel`
 - Presets: `airbnb`
 - Source maps: enabled
 
 To rebuild manually:
 ```bash
-cd /Users/apor/Developement/MikoPBX/MikoPBXUtils && \
+cd /Users/apor/Developement/DzvinPBX/DzvinPBXUtils && \
 cp babel.config.json babel.config.json.bak && \
 echo '{"presets":[["@babel/preset-env",{"targets":{"chrome":50,"ie":11,"firefox":45}}]]}' > babel.config.json && \
 ./node_modules/.bin/babel \
-  /Volumes/DevDisk/apor/Developement/MikoPBX/Extensions/ModuleMonitorActiveCalls/public/assets/js/src/module-monitor-active-calls-index.js \
-  --out-dir /Volumes/DevDisk/apor/Developement/MikoPBX/Extensions/ModuleMonitorActiveCalls/public/assets/js/ \
+  /Volumes/DevDisk/apor/Developement/DzvinPBX/Extensions/ModuleMonitorActiveCalls/public/assets/js/src/module-monitor-active-calls-index.js \
+  --out-dir /Volumes/DevDisk/apor/Developement/DzvinPBX/Extensions/ModuleMonitorActiveCalls/public/assets/js/ \
   --source-maps && \
 mv babel.config.json.bak babel.config.json
 ```

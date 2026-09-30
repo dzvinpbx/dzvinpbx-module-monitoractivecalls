@@ -1,3 +1,3 @@
 <?php
 
-// Intentionally empty: the production bootstrap is supplied by MikoPBX.
+// Intentionally empty: the production bootstrap is supplied by DzvinPBX.

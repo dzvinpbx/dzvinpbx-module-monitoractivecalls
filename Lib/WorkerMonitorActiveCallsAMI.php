@@ -1,9 +1,9 @@
 <?php
 namespace Modules\ModuleMonitorActiveCalls\Lib;
 
-use MikoPBX\Core\System\Util;
-use MikoPBX\Core\Workers\WorkerBase;
-use MikoPBX\Core\Asterisk\AsteriskManager;
+use DzvinPBX\Core\System\Util;
+use DzvinPBX\Core\Workers\WorkerBase;
+use DzvinPBX\Core\Asterisk\AsteriskManager;
 use Error;
 
 require_once 'Globals.php';

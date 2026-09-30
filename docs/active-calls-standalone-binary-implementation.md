@@ -18,12 +18,12 @@
 
 Проверенная версия решает значительную часть задачи: восстанавливает каналы и bridge из AMI, отслеживает смену `linkedid` при pickup/transfer, строит состояния сотрудников и публикует персонализированные снимки через `ModuleSoftphoneBackend`. Однако она **не реализует исходную постановку полностью**:
 
-- в `users-state.channels[*]` формируются только `channel`, `number`, `direction`; полей `linkedid`, `uniqueid`, `channelId`, `answerState` нет ([WorkerActiveCalls.php:643](/Volumes/DevDisk/apor/Developement/MikoPBX/Extensions/ModuleMonitorActiveCalls/bin/WorkerActiveCalls.php:643));
+- в `users-state.channels[*]` формируются только `channel`, `number`, `direction`; полей `linkedid`, `uniqueid`, `channelId`, `answerState` нет ([WorkerActiveCalls.php:643](/Volumes/DevDisk/apor/Developement/DzvinPBX/Extensions/ModuleMonitorActiveCalls/bin/WorkerActiveCalls.php:643));
 - фильтр backend разрешает только те же три поля, поэтому даже добавленные producer-ом поля сейчас были бы удалены ([CallAccessFilter.php:90](/Volumes/DevDisk/apor/Developement/Softphone/ModuleSoftphoneBackend/Lib/Authorization/CallAccessFilter.php:90));
-- `direction` определяется сравнением с одним `src_chan`, а не конечным автоматом `Dial`/`Bridge`/CEL ([WorkerActiveCalls.php:706](/Volumes/DevDisk/apor/Developement/MikoPBX/Extensions/ModuleMonitorActiveCalls/bin/WorkerActiveCalls.php:706));
-- `CALL_EVENTS` не содержит `DialBegin`, `DialEnd`, `BridgeCreate`, `BridgeDestroy`, `ContactStatus` и CEL ([WorkerActiveCalls.php:76](/Volumes/DevDisk/apor/Developement/MikoPBX/Extensions/ModuleMonitorActiveCalls/bin/WorkerActiveCalls.php:76));
-- стартовый `CoreShowChannels` пропускает `Local/*` ([WorkerActiveCalls.php:996](/Volumes/DevDisk/apor/Developement/MikoPBX/Extensions/ModuleMonitorActiveCalls/bin/WorkerActiveCalls.php:996));
-- повторная публикация раз в 30 секунд отправляет последний сохранённый payload, а не новый снимок Asterisk ([WorkerActiveCalls.php:619](/Volumes/DevDisk/apor/Developement/MikoPBX/Extensions/ModuleMonitorActiveCalls/bin/WorkerActiveCalls.php:619));
+- `direction` определяется сравнением с одним `src_chan`, а не конечным автоматом `Dial`/`Bridge`/CEL ([WorkerActiveCalls.php:706](/Volumes/DevDisk/apor/Developement/DzvinPBX/Extensions/ModuleMonitorActiveCalls/bin/WorkerActiveCalls.php:706));
+- `CALL_EVENTS` не содержит `DialBegin`, `DialEnd`, `BridgeCreate`, `BridgeDestroy`, `ContactStatus` и CEL ([WorkerActiveCalls.php:76](/Volumes/DevDisk/apor/Developement/DzvinPBX/Extensions/ModuleMonitorActiveCalls/bin/WorkerActiveCalls.php:76));
+- стартовый `CoreShowChannels` пропускает `Local/*` ([WorkerActiveCalls.php:996](/Volumes/DevDisk/apor/Developement/DzvinPBX/Extensions/ModuleMonitorActiveCalls/bin/WorkerActiveCalls.php:996));
+- повторная публикация раз в 30 секунд отправляет последний сохранённый payload, а не новый снимок Asterisk ([WorkerActiveCalls.php:619](/Volumes/DevDisk/apor/Developement/DzvinPBX/Extensions/ModuleMonitorActiveCalls/bin/WorkerActiveCalls.php:619));
 - выдаваемая Monitor UI-сессия содержит `contacts:read` и `active-calls:read`, но не `users-state:read`, и не возвращает маршрут `users_state` ([ModuleUiSessionService.php:28](/Volumes/DevDisk/apor/Developement/Softphone/ModuleSoftphoneBackend/Lib/ClientAPI/ModuleUiSessionService.php:28));
 - очереди исключены из проверки extension scope и поэтому попадают всем подписчикам ([CallAccessFilter.php:45](/Volumes/DevDisk/apor/Developement/Softphone/ModuleSoftphoneBackend/Lib/Authorization/CallAccessFilter.php:45)).
 
@@ -61,13 +61,13 @@ ModuleSoftphoneBackend::ClientActionFactory
 5. после полного bootstrap начинает публикацию;
 6. далее обновляет модель по AMI-событиям и выполняет idle callback раз в секунду.
 
-Код: [WorkerActiveCalls.php:280](/Volumes/DevDisk/apor/Developement/MikoPBX/Extensions/ModuleMonitorActiveCalls/bin/WorkerActiveCalls.php:280), восстановление AMI — [WorkerActiveCalls.php:333](/Volumes/DevDisk/apor/Developement/MikoPBX/Extensions/ModuleMonitorActiveCalls/bin/WorkerActiveCalls.php:333), регистрация фильтров — [WorkerActiveCalls.php:1207](/Volumes/DevDisk/apor/Developement/MikoPBX/Extensions/ModuleMonitorActiveCalls/bin/WorkerActiveCalls.php:1207).
+Код: [WorkerActiveCalls.php:280](/Volumes/DevDisk/apor/Developement/DzvinPBX/Extensions/ModuleMonitorActiveCalls/bin/WorkerActiveCalls.php:280), восстановление AMI — [WorkerActiveCalls.php:333](/Volumes/DevDisk/apor/Developement/DzvinPBX/Extensions/ModuleMonitorActiveCalls/bin/WorkerActiveCalls.php:333), регистрация фильтров — [WorkerActiveCalls.php:1207](/Volumes/DevDisk/apor/Developement/DzvinPBX/Extensions/ModuleMonitorActiveCalls/bin/WorkerActiveCalls.php:1207).
 
-Контроль процесса сделан через state-файл `/tmp/MonitorActiveCalls_worker.state` ([WorkerActiveCalls.php:120](/Volumes/DevDisk/apor/Developement/MikoPBX/Extensions/ModuleMonitorActiveCalls/bin/WorkerActiveCalls.php:120)); worker регистрируется в safe-script как `CHECK_BY_PID_NOT_ALERT` ([MonitorActiveCallsConf.php:36](/Volumes/DevDisk/apor/Developement/MikoPBX/Extensions/ModuleMonitorActiveCalls/Lib/MonitorActiveCallsConf.php:36)).
+Контроль процесса сделан через state-файл `/tmp/MonitorActiveCalls_worker.state` ([WorkerActiveCalls.php:120](/Volumes/DevDisk/apor/Developement/DzvinPBX/Extensions/ModuleMonitorActiveCalls/bin/WorkerActiveCalls.php:120)); worker регистрируется в safe-script как `CHECK_BY_PID_NOT_ALERT` ([MonitorActiveCallsConf.php:36](/Volumes/DevDisk/apor/Developement/DzvinPBX/Extensions/ModuleMonitorActiveCalls/Lib/MonitorActiveCallsConf.php:36)).
 
 ### 3.2. Текущая in-memory модель
 
-Ключевые структуры объявлены в [WorkerActiveCalls.php:40](/Volumes/DevDisk/apor/Developement/MikoPBX/Extensions/ModuleMonitorActiveCalls/bin/WorkerActiveCalls.php:40):
+Ключевые структуры объявлены в [WorkerActiveCalls.php:40](/Volumes/DevDisk/apor/Developement/DzvinPBX/Extensions/ModuleMonitorActiveCalls/bin/WorkerActiveCalls.php:40):
 
 | Структура | Ключ | Назначение |
 |---|---|---|
@@ -81,15 +81,15 @@ ModuleSoftphoneBackend::ClientActionFactory
 | `channelLinkedIds` | channel | последний известный linkedid |
 | `linkedIdAliases` | old linkedid | канонический linkedid после masquerade/pickup |
 
-Формат `activeChannels[linkedid][channel]` создаётся при стартовом опросе в [WorkerActiveCalls.php:1021](/Volumes/DevDisk/apor/Developement/MikoPBX/Extensions/ModuleMonitorActiveCalls/bin/WorkerActiveCalls.php:1021) и из `Newchannel`/`Newstate` в [WorkerActiveCalls.php:1345](/Volumes/DevDisk/apor/Developement/MikoPBX/Extensions/ModuleMonitorActiveCalls/bin/WorkerActiveCalls.php:1345). Он хранит `ChannelStateDesc`, `CallerIDNum`, `ConnectedLineNum`, `Uniqueid`, endpoint, тип, extension и признак application context.
+Формат `activeChannels[linkedid][channel]` создаётся при стартовом опросе в [WorkerActiveCalls.php:1021](/Volumes/DevDisk/apor/Developement/DzvinPBX/Extensions/ModuleMonitorActiveCalls/bin/WorkerActiveCalls.php:1021) и из `Newchannel`/`Newstate` в [WorkerActiveCalls.php:1345](/Volumes/DevDisk/apor/Developement/DzvinPBX/Extensions/ModuleMonitorActiveCalls/bin/WorkerActiveCalls.php:1345). Он хранит `ChannelStateDesc`, `CallerIDNum`, `ConnectedLineNum`, `Uniqueid`, endpoint, тип, extension и признак application context.
 
 ### 3.3. Первоначальный снимок
 
-- `PJSIPShowEndpoints` преобразуется в `Idle`, `Up`, `Unavailable`, `Ringing`; endpoint `NNN-WS` объединяется с `NNN` ([WorkerActiveCalls.php:1115](/Volumes/DevDisk/apor/Developement/MikoPBX/Extensions/ModuleMonitorActiveCalls/bin/WorkerActiveCalls.php:1115)).
-- список сотрудников берётся из моделей `Extensions` ([WorkerActiveCalls.php:1158](/Volumes/DevDisk/apor/Developement/MikoPBX/Extensions/ModuleMonitorActiveCalls/bin/WorkerActiveCalls.php:1158)).
-- активные каналы берутся через `CoreShowChannels`, сгруппированный по `Linkedid` ([LegacyAsteriskManager.php:859](/Volumes/DevDisk/apor/Developement/MikoPBX/Extensions/ModuleMonitorActiveCalls/Lib/LegacyAsteriskManager.php:859)). Для каждого канала дополнительные поля читаются отдельными `GetVar`.
-- bridge восстанавливаются через `BridgeList` и `BridgeInfo`, затем синтетически проигрываются как `BridgeEnter` ([WorkerActiveCalls.php:368](/Volumes/DevDisk/apor/Developement/MikoPBX/Extensions/ModuleMonitorActiveCalls/bin/WorkerActiveCalls.php:368)).
-- очереди и ожидающие абоненты восстанавливаются через модели и `QueueStatus` ([WorkerActiveCalls.php:946](/Volumes/DevDisk/apor/Developement/MikoPBX/Extensions/ModuleMonitorActiveCalls/bin/WorkerActiveCalls.php:946)).
+- `PJSIPShowEndpoints` преобразуется в `Idle`, `Up`, `Unavailable`, `Ringing`; endpoint `NNN-WS` объединяется с `NNN` ([WorkerActiveCalls.php:1115](/Volumes/DevDisk/apor/Developement/DzvinPBX/Extensions/ModuleMonitorActiveCalls/bin/WorkerActiveCalls.php:1115)).
+- список сотрудников берётся из моделей `Extensions` ([WorkerActiveCalls.php:1158](/Volumes/DevDisk/apor/Developement/DzvinPBX/Extensions/ModuleMonitorActiveCalls/bin/WorkerActiveCalls.php:1158)).
+- активные каналы берутся через `CoreShowChannels`, сгруппированный по `Linkedid` ([LegacyAsteriskManager.php:859](/Volumes/DevDisk/apor/Developement/DzvinPBX/Extensions/ModuleMonitorActiveCalls/Lib/LegacyAsteriskManager.php:859)). Для каждого канала дополнительные поля читаются отдельными `GetVar`.
+- bridge восстанавливаются через `BridgeList` и `BridgeInfo`, затем синтетически проигрываются как `BridgeEnter` ([WorkerActiveCalls.php:368](/Volumes/DevDisk/apor/Developement/DzvinPBX/Extensions/ModuleMonitorActiveCalls/bin/WorkerActiveCalls.php:368)).
+- очереди и ожидающие абоненты восстанавливаются через модели и `QueueStatus` ([WorkerActiveCalls.php:946](/Volumes/DevDisk/apor/Developement/DzvinPBX/Extensions/ModuleMonitorActiveCalls/bin/WorkerActiveCalls.php:946)).
 
 ### 3.4. Событийная обработка
 
@@ -102,19 +102,19 @@ ModuleSoftphoneBackend::ClientActionFactory
 - `ChanSpyStart`/`ChanSpyStop`: отмечает прослушивание;
 - `UserEvent`: ping/config refresh.
 
-Основной код: [WorkerActiveCalls.php:1249](/Volumes/DevDisk/apor/Developement/MikoPBX/Extensions/ModuleMonitorActiveCalls/bin/WorkerActiveCalls.php:1249). Очереди обновляются отдельно в [WorkerActiveCalls.php:1594](/Volumes/DevDisk/apor/Developement/MikoPBX/Extensions/ModuleMonitorActiveCalls/bin/WorkerActiveCalls.php:1594), регистрационное/device state — через `ExtensionStatus` в [WorkerActiveCalls.php:1646](/Volumes/DevDisk/apor/Developement/MikoPBX/Extensions/ModuleMonitorActiveCalls/bin/WorkerActiveCalls.php:1646).
+Основной код: [WorkerActiveCalls.php:1249](/Volumes/DevDisk/apor/Developement/DzvinPBX/Extensions/ModuleMonitorActiveCalls/bin/WorkerActiveCalls.php:1249). Очереди обновляются отдельно в [WorkerActiveCalls.php:1594](/Volumes/DevDisk/apor/Developement/DzvinPBX/Extensions/ModuleMonitorActiveCalls/bin/WorkerActiveCalls.php:1594), регистрационное/device state — через `ExtensionStatus` в [WorkerActiveCalls.php:1646](/Volumes/DevDisk/apor/Developement/DzvinPBX/Extensions/ModuleMonitorActiveCalls/bin/WorkerActiveCalls.php:1646).
 
 ### 3.5. Local-каналы, bridge и pickup
 
-`findBridgeChannel()` проходит цепочку bridge, переключает `Local/...;1 ↔ Local/...;2` и продолжает до физического плеча ([WorkerActiveCalls.php:852](/Volumes/DevDisk/apor/Developement/MikoPBX/Extensions/ModuleMonitorActiveCalls/bin/WorkerActiveCalls.php:852)).
+`findBridgeChannel()` проходит цепочку bridge, переключает `Local/...;1 ↔ Local/...;2` и продолжает до физического плеча ([WorkerActiveCalls.php:852](/Volumes/DevDisk/apor/Developement/DzvinPBX/Extensions/ModuleMonitorActiveCalls/bin/WorkerActiveCalls.php:852)).
 
 При pickup/transfer Asterisk может изменить `Linkedid`. Текущая реализация:
 
-- распознаёт вызов `*8XXX` и запоминает pickup-канал ([WorkerActiveCalls.php:1334](/Volumes/DevDisk/apor/Developement/MikoPBX/Extensions/ModuleMonitorActiveCalls/bin/WorkerActiveCalls.php:1334));
+- распознаёт вызов `*8XXX` и запоминает pickup-канал ([WorkerActiveCalls.php:1334](/Volumes/DevDisk/apor/Developement/DzvinPBX/Extensions/ModuleMonitorActiveCalls/bin/WorkerActiveCalls.php:1334));
 - обрабатывает `SwapUniqueid`;
 - ищет уже известный канал под другим linkedid;
-- переносит channel metadata, call metadata, bridge и spy data через `migrateChannel()` ([WorkerActiveCalls.php:792](/Volumes/DevDisk/apor/Developement/MikoPBX/Extensions/ModuleMonitorActiveCalls/bin/WorkerActiveCalls.php:792));
-- создаёт алиасы linkedid для последующего обхода bridge ([WorkerActiveCalls.php:1401](/Volumes/DevDisk/apor/Developement/MikoPBX/Extensions/ModuleMonitorActiveCalls/bin/WorkerActiveCalls.php:1401)).
+- переносит channel metadata, call metadata, bridge и spy data через `migrateChannel()` ([WorkerActiveCalls.php:792](/Volumes/DevDisk/apor/Developement/DzvinPBX/Extensions/ModuleMonitorActiveCalls/bin/WorkerActiveCalls.php:792));
+- создаёт алиасы linkedid для последующего обхода bridge ([WorkerActiveCalls.php:1401](/Volumes/DevDisk/apor/Developement/DzvinPBX/Extensions/ModuleMonitorActiveCalls/bin/WorkerActiveCalls.php:1401)).
 
 Этот механизм следует перенести как защиту от masquerade, но заменить эвристики явным индексом `uniqueid → channel record` и графом связей.
 
@@ -125,9 +125,9 @@ ModuleSoftphoneBackend::ClientActionFactory
 - `{queues, calls}` для старого Monitor UI;
 - `{states: {extension: {name, state, channels}}}` для клиентов presence.
 
-Изменения определяются MD5 полного JSON. Active calls публикуются немедленно, users-state — с debounce 200 мс ([WorkerActiveCalls.php:535](/Volumes/DevDisk/apor/Developement/MikoPBX/Extensions/ModuleMonitorActiveCalls/bin/WorkerActiveCalls.php:535), [WorkerActiveCalls.php:580](/Volumes/DevDisk/apor/Developement/MikoPBX/Extensions/ModuleMonitorActiveCalls/bin/WorkerActiveCalls.php:580)). Redis использует DB 3 и префикс `ModuleMonitorActiveCalls_` ([CacheManager.php:28](/Volumes/DevDisk/apor/Developement/MikoPBX/Extensions/ModuleMonitorActiveCalls/Lib/CacheManager.php:28)).
+Изменения определяются MD5 полного JSON. Active calls публикуются немедленно, users-state — с debounce 200 мс ([WorkerActiveCalls.php:535](/Volumes/DevDisk/apor/Developement/DzvinPBX/Extensions/ModuleMonitorActiveCalls/bin/WorkerActiveCalls.php:535), [WorkerActiveCalls.php:580](/Volumes/DevDisk/apor/Developement/DzvinPBX/Extensions/ModuleMonitorActiveCalls/bin/WorkerActiveCalls.php:580)). Redis использует DB 3 и префикс `ModuleMonitorActiveCalls_` ([CacheManager.php:28](/Volumes/DevDisk/apor/Developement/DzvinPBX/Extensions/ModuleMonitorActiveCalls/Lib/CacheManager.php:28)).
 
-Адаптер выбирает современный или legacy backend и вызывает `publishActiveCalls`/`publishUserStates` ([MonitorActiveCallsMain.php:153](/Volumes/DevDisk/apor/Developement/MikoPBX/Extensions/ModuleMonitorActiveCalls/Lib/MonitorActiveCallsMain.php:153)). Backend сохраняет raw snapshot, строит `AuthorizationContext` для каждого пользователя, фильтрует payload и публикует в персональный Nchan channel ([ClientActionFactory.php:1291](/Volumes/DevDisk/apor/Developement/Softphone/ModuleSoftphoneBackend/Lib/ClientAPI/ClientActionFactory.php:1291), [ClientActionFactory.php:1344](/Volumes/DevDisk/apor/Developement/Softphone/ModuleSoftphoneBackend/Lib/ClientAPI/ClientActionFactory.php:1344)).
+Адаптер выбирает современный или legacy backend и вызывает `publishActiveCalls`/`publishUserStates` ([MonitorActiveCallsMain.php:153](/Volumes/DevDisk/apor/Developement/DzvinPBX/Extensions/ModuleMonitorActiveCalls/Lib/MonitorActiveCallsMain.php:153)). Backend сохраняет raw snapshot, строит `AuthorizationContext` для каждого пользователя, фильтрует payload и публикует в персональный Nchan channel ([ClientActionFactory.php:1291](/Volumes/DevDisk/apor/Developement/Softphone/ModuleSoftphoneBackend/Lib/ClientAPI/ClientActionFactory.php:1291), [ClientActionFactory.php:1344](/Volumes/DevDisk/apor/Developement/Softphone/ModuleSoftphoneBackend/Lib/ClientAPI/ClientActionFactory.php:1344)).
 
 ## 4. Целевая граница отдельного бинарника
 
@@ -146,7 +146,7 @@ ModuleSoftphoneBackend::ClientActionFactory
 
 ### 4.2. Что не следует переносить в state engine
 
-Авторизацию MikoPBX, JWT, группы доступа и Nchan admission целесообразно оставить в `ModuleSoftphoneBackend`:
+Авторизацию DzvinPBX, JWT, группы доступа и Nchan admission целесообразно оставить в `ModuleSoftphoneBackend`:
 
 - идентичность подписчика извлекается из проверенного JWT, а не из входного номера ([SubscriptionAccessAction.php:24](/Volumes/DevDisk/apor/Developement/Softphone/ModuleSoftphoneBackend/Lib/ClientAPI/Actions/Admission/SubscriptionAccessAction.php:24));
 - Nginx связывает subject токена с `users-state-user-{id}` ([SoftphoneBackendConf.php:586](/Volumes/DevDisk/apor/Developement/Softphone/ModuleSoftphoneBackend/Lib/SoftphoneBackendConf.php:586));
@@ -229,8 +229,8 @@ old linkedid ──alias──> canonical linkedid
         "channel": "PJSIP/269-000003d9",
         "number": "269",
         "direction": "incoming",
-        "linkedid": "mikopbx-1788183285.2108",
-        "uniqueid": "mikopbx-1788183285.2110",
+        "linkedid": "dzvinpbx-1788183285.2108",
+        "uniqueid": "dzvinpbx-1788183285.2110",
         "channelId": "000003d8",
         "answerState": "ringing",
         "pickupAvailable": true
@@ -300,7 +300,7 @@ CallerID и ConnectedLine используются только для номе�
 4. при transfer использовать новые bridge/Dial edges и alias linkedid;
 5. если peer неоднозначен, `channel=""`, но собственный полный канал и его идентификаторы всё равно сохраняются.
 
-Текущий алгоритм обхода можно использовать как reference ([WorkerActiveCalls.php:852](/Volumes/DevDisk/apor/Developement/MikoPBX/Extensions/ModuleMonitorActiveCalls/bin/WorkerActiveCalls.php:852)), но бинарник не должен зависеть от порядка элементов associative array в bridge.
+Текущий алгоритм обхода можно использовать как reference ([WorkerActiveCalls.php:852](/Volumes/DevDisk/apor/Developement/DzvinPBX/Extensions/ModuleMonitorActiveCalls/bin/WorkerActiveCalls.php:852)), но бинарник не должен зависеть от порядка элементов associative array в bridge.
 
 ## 8. Pickup
 
@@ -359,13 +359,13 @@ Nchan channel должен иметь buffer length 1; последний **по
 
 ### 9.3. Reconciliation
 
-Каждые 15–30 секунд и после AMI reconnect бинарник повторно запрашивает фактические каналы/bridge/endpoint states. Отсутствующий канал удаляется, даже если `Hangup` был потерян. Публикуется новый snapshot только после успешного полного опроса; ошибка AMI не считается доказательством завершения всех вызовов. Аналогичная защита уже есть в [WorkerActiveCalls.php:169](/Volumes/DevDisk/apor/Developement/MikoPBX/Extensions/ModuleMonitorActiveCalls/bin/WorkerActiveCalls.php:169).
+Каждые 15–30 секунд и после AMI reconnect бинарник повторно запрашивает фактические каналы/bridge/endpoint states. Отсутствующий канал удаляется, даже если `Hangup` был потерян. Публикуется новый snapshot только после успешного полного опроса; ошибка AMI не считается доказательством завершения всех вызовов. Аналогичная защита уже есть в [WorkerActiveCalls.php:169](/Volumes/DevDisk/apor/Developement/DzvinPBX/Extensions/ModuleMonitorActiveCalls/bin/WorkerActiveCalls.php:169).
 
 ## 10. Авторизация и фильтрация
 
 ### 10.1. Поток идентичности
 
-1. Monitor controller получает user ID из серверной сессии, а не из request body ([ModuleMonitorActiveCallsController.php:152](/Volumes/DevDisk/apor/Developement/MikoPBX/Extensions/ModuleMonitorActiveCalls/App/Controllers/ModuleMonitorActiveCallsController.php:152), [ModuleMonitorActiveCallsController.php:231](/Volumes/DevDisk/apor/Developement/MikoPBX/Extensions/ModuleMonitorActiveCalls/App/Controllers/ModuleMonitorActiveCallsController.php:231)).
+1. Monitor controller получает user ID из серверной сессии, а не из request body ([ModuleMonitorActiveCallsController.php:152](/Volumes/DevDisk/apor/Developement/DzvinPBX/Extensions/ModuleMonitorActiveCalls/App/Controllers/ModuleMonitorActiveCallsController.php:152), [ModuleMonitorActiveCallsController.php:231](/Volumes/DevDisk/apor/Developement/DzvinPBX/Extensions/ModuleMonitorActiveCalls/App/Controllers/ModuleMonitorActiveCallsController.php:231)).
 2. Backend выдаёт ограниченный `module_ui` JWT.
 3. Nginx admission проверяет token type/audience/scope и получает user ID из `sub`.
 4. Подписчик привязывается только к персональному channel.
@@ -419,7 +419,7 @@ endpoint, peerChannel, direction, answerState,
 pickupAvailable, pickupReason, bridgeId, queueId, source
 ```
 
-Логировать channel create/update/end, Dial edge, Bridge membership, linkedid migration, employee transition, lost-event reconciliation, full/incremental publish и отказ pickup. Не логировать JWT, SIP-пароли, Authorization, action ticket или полный HTTP query string. Текущий logger вызывается после каждого обработанного AMI-события в [WorkerActiveCalls.php:1578](/Volumes/DevDisk/apor/Developement/MikoPBX/Extensions/ModuleMonitorActiveCalls/bin/WorkerActiveCalls.php:1578); в бинарнике лучше логировать нормализованное событие, а не сырой массив целиком.
+Логировать channel create/update/end, Dial edge, Bridge membership, linkedid migration, employee transition, lost-event reconciliation, full/incremental publish и отказ pickup. Не логировать JWT, SIP-пароли, Authorization, action ticket или полный HTTP query string. Текущий logger вызывается после каждого обработанного AMI-события в [WorkerActiveCalls.php:1578](/Volumes/DevDisk/apor/Developement/DzvinPBX/Extensions/ModuleMonitorActiveCalls/bin/WorkerActiveCalls.php:1578); в бинарнике лучше логировать нормализованное событие, а не сырой массив целиком.
 
 ## 13. Конфигурация и упаковка
 
@@ -431,18 +431,18 @@ ami:
   usernameFile: <root-readable file>
   secretFile: <root-readable file>
 publisher:
-  unixSocket: /run/mikopbx/active-calls.sock
+  unixSocket: /run/dzvinpbx/active-calls.sock
 reconcileInterval: 20s
 debounce: 150ms
 logLevel: info
 ```
 
-AMI credential нельзя передавать в process arguments или environment. Текущий PHP-код использует одинаковые username/secret `monitor-active-calls` ([MonitorActiveCallsConf.php:20](/Volumes/DevDisk/apor/Developement/MikoPBX/Extensions/ModuleMonitorActiveCalls/Lib/MonitorActiveCallsConf.php:20), [WorkerActiveCalls.php:1209](/Volumes/DevDisk/apor/Developement/MikoPBX/Extensions/ModuleMonitorActiveCalls/bin/WorkerActiveCalls.php:1209)); при выносе предпочтителен сгенерированный секрет с минимальными AMI privileges.
+AMI credential нельзя передавать в process arguments или environment. Текущий PHP-код использует одинаковые username/secret `monitor-active-calls` ([MonitorActiveCallsConf.php:20](/Volumes/DevDisk/apor/Developement/DzvinPBX/Extensions/ModuleMonitorActiveCalls/Lib/MonitorActiveCallsConf.php:20), [WorkerActiveCalls.php:1209](/Volumes/DevDisk/apor/Developement/DzvinPBX/Extensions/ModuleMonitorActiveCalls/bin/WorkerActiveCalls.php:1209)); при выносе предпочтителен сгенерированный секрет с минимальными AMI privileges.
 
 Установщик модуля должен:
 
 - положить бинарник в versioned module directory;
-- создать непривилегированного runtime user либо запустить через штатный supervisor MikoPBX;
+- создать непривилегированного runtime user либо запустить через штатный supervisor DzvinPBX;
 - создать runtime directory/socket с узкими правами;
 - сгенерировать AMI user и конфигурацию;
 - зарегистрировать health check и ротацию логов;
@@ -502,18 +502,18 @@ AMI credential нельзя передавать в process arguments или env
 
 | Область | Основной reference |
 |---|---|
-| Worker lifecycle и bootstrap | [WorkerActiveCalls.php:280](/Volumes/DevDisk/apor/Developement/MikoPBX/Extensions/ModuleMonitorActiveCalls/bin/WorkerActiveCalls.php:280) |
-| Reconciliation | [WorkerActiveCalls.php:169](/Volumes/DevDisk/apor/Developement/MikoPBX/Extensions/ModuleMonitorActiveCalls/bin/WorkerActiveCalls.php:169) |
-| Active calls projection | [WorkerActiveCalls.php:386](/Volumes/DevDisk/apor/Developement/MikoPBX/Extensions/ModuleMonitorActiveCalls/bin/WorkerActiveCalls.php:386) |
-| Presence/channel projection | [WorkerActiveCalls.php:643](/Volumes/DevDisk/apor/Developement/MikoPBX/Extensions/ModuleMonitorActiveCalls/bin/WorkerActiveCalls.php:643) |
-| Bridge traversal | [WorkerActiveCalls.php:852](/Volumes/DevDisk/apor/Developement/MikoPBX/Extensions/ModuleMonitorActiveCalls/bin/WorkerActiveCalls.php:852) |
-| Initial channel snapshot | [WorkerActiveCalls.php:996](/Volumes/DevDisk/apor/Developement/MikoPBX/Extensions/ModuleMonitorActiveCalls/bin/WorkerActiveCalls.php:996) |
-| Endpoint snapshot | [WorkerActiveCalls.php:1115](/Volumes/DevDisk/apor/Developement/MikoPBX/Extensions/ModuleMonitorActiveCalls/bin/WorkerActiveCalls.php:1115) |
-| AMI filters | [WorkerActiveCalls.php:1207](/Volumes/DevDisk/apor/Developement/MikoPBX/Extensions/ModuleMonitorActiveCalls/bin/WorkerActiveCalls.php:1207) |
-| Call event reducer | [WorkerActiveCalls.php:1249](/Volumes/DevDisk/apor/Developement/MikoPBX/Extensions/ModuleMonitorActiveCalls/bin/WorkerActiveCalls.php:1249) |
-| Queue reducer | [WorkerActiveCalls.php:1594](/Volumes/DevDisk/apor/Developement/MikoPBX/Extensions/ModuleMonitorActiveCalls/bin/WorkerActiveCalls.php:1594) |
-| Endpoint state reducer | [WorkerActiveCalls.php:1646](/Volumes/DevDisk/apor/Developement/MikoPBX/Extensions/ModuleMonitorActiveCalls/bin/WorkerActiveCalls.php:1646) |
-| Backend adapter | [MonitorActiveCallsMain.php:83](/Volumes/DevDisk/apor/Developement/MikoPBX/Extensions/ModuleMonitorActiveCalls/Lib/MonitorActiveCallsMain.php:83) |
+| Worker lifecycle и bootstrap | [WorkerActiveCalls.php:280](/Volumes/DevDisk/apor/Developement/DzvinPBX/Extensions/ModuleMonitorActiveCalls/bin/WorkerActiveCalls.php:280) |
+| Reconciliation | [WorkerActiveCalls.php:169](/Volumes/DevDisk/apor/Developement/DzvinPBX/Extensions/ModuleMonitorActiveCalls/bin/WorkerActiveCalls.php:169) |
+| Active calls projection | [WorkerActiveCalls.php:386](/Volumes/DevDisk/apor/Developement/DzvinPBX/Extensions/ModuleMonitorActiveCalls/bin/WorkerActiveCalls.php:386) |
+| Presence/channel projection | [WorkerActiveCalls.php:643](/Volumes/DevDisk/apor/Developement/DzvinPBX/Extensions/ModuleMonitorActiveCalls/bin/WorkerActiveCalls.php:643) |
+| Bridge traversal | [WorkerActiveCalls.php:852](/Volumes/DevDisk/apor/Developement/DzvinPBX/Extensions/ModuleMonitorActiveCalls/bin/WorkerActiveCalls.php:852) |
+| Initial channel snapshot | [WorkerActiveCalls.php:996](/Volumes/DevDisk/apor/Developement/DzvinPBX/Extensions/ModuleMonitorActiveCalls/bin/WorkerActiveCalls.php:996) |
+| Endpoint snapshot | [WorkerActiveCalls.php:1115](/Volumes/DevDisk/apor/Developement/DzvinPBX/Extensions/ModuleMonitorActiveCalls/bin/WorkerActiveCalls.php:1115) |
+| AMI filters | [WorkerActiveCalls.php:1207](/Volumes/DevDisk/apor/Developement/DzvinPBX/Extensions/ModuleMonitorActiveCalls/bin/WorkerActiveCalls.php:1207) |
+| Call event reducer | [WorkerActiveCalls.php:1249](/Volumes/DevDisk/apor/Developement/DzvinPBX/Extensions/ModuleMonitorActiveCalls/bin/WorkerActiveCalls.php:1249) |
+| Queue reducer | [WorkerActiveCalls.php:1594](/Volumes/DevDisk/apor/Developement/DzvinPBX/Extensions/ModuleMonitorActiveCalls/bin/WorkerActiveCalls.php:1594) |
+| Endpoint state reducer | [WorkerActiveCalls.php:1646](/Volumes/DevDisk/apor/Developement/DzvinPBX/Extensions/ModuleMonitorActiveCalls/bin/WorkerActiveCalls.php:1646) |
+| Backend adapter | [MonitorActiveCallsMain.php:83](/Volumes/DevDisk/apor/Developement/DzvinPBX/Extensions/ModuleMonitorActiveCalls/Lib/MonitorActiveCallsMain.php:83) |
 | Per-user publication | [ClientActionFactory.php:1291](/Volumes/DevDisk/apor/Developement/Softphone/ModuleSoftphoneBackend/Lib/ClientAPI/ClientActionFactory.php:1291) |
 | ACL filter | [CallAccessFilter.php:31](/Volumes/DevDisk/apor/Developement/Softphone/ModuleSoftphoneBackend/Lib/Authorization/CallAccessFilter.php:31) |
 | Authorization context | [AuthorizationService.php:14](/Volumes/DevDisk/apor/Developement/Softphone/ModuleSoftphoneBackend/Lib/Authorization/AuthorizationService.php:14) |

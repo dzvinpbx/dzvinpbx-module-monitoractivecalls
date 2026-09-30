@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace MikoPBX\Core\Workers {
+namespace DzvinPBX\Core\Workers {
     class WorkerBase
     {
     }
@@ -132,8 +132,8 @@ namespace {
         'ConnectedLineNum' => '200',
         'Context' => 'internal',
         'Exten' => '132',
-        'Uniqueid' => 'mikopbx-1.2',
-        'Linkedid' => 'mikopbx-1.1',
+        'Uniqueid' => 'dzvinpbx-1.2',
+        'Linkedid' => 'dzvinpbx-1.1',
     ];
     $worker->callEvents(['Event' => 'Newchannel'] + $baseEvent);
     $worker->callEvents(['Event' => 'Hangup'] + $baseEvent);

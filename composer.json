@@ -1,5 +1,5 @@
 {
-    "name": "mikopbx/moduletemplate",
+    "name": "dzvinpbx/module-monitoractivecalls",
     "description": "ModuleMonitorActiveCalls",
     "require": {
         "cesargb/php-log-rotation": "2.6.0"
@@ -14,7 +14,7 @@
         "pbx",
         "asterisk",
         "freepbx",
-        "mikopbx",
+        "dzvinpbx",
         "sip",
         "voip",
         "phalcon",
@@ -22,33 +22,23 @@
         "uc"
     ],
     "license": "GPL-3.0-or-later",
-    "homepage": "https://github.com/mikopbx/ModuleMonitorActiveCalls",
+    "homepage": "https://github.com/dzvinpbx/dzvinpbx-module-monitoractivecalls",
     "support": {
-        "email": "help@mikopbx.com",
-        "wiki": "https://wiki.mikopbx.com",
-        "issues": "https://github.com/mikopbx/Core/issues",
-        "source": "https://github.com/mikopbx/Core",
-        "forum": "https://qa.askozia.ru",
-        "chat": "https://t.me/mikopbx_dev"
+        "issues": "https://github.com/dzvinpbx/dzvinpbx-module-monitoractivecalls/issues",
+        "source": "https://github.com/dzvinpbx/dzvinpbx-module-monitoractivecalls"
     },
     "authors": [
         {
             "name": "Alexey Portnov",
             "email": "apor@miko.ru",
             "homepage": "https://www.facebook.com/PortnovAlexey",
-            "role": "Developer"
+            "role": "Developer (upstream MikoPBX ModuleMonitorActiveCalls)"
         },
         {
             "name": "Nikolay Beketov",
             "email": "nbek@miko.ru",
             "homepage": "http://facebook.com/jorikfon",
-            "role": "Developer"
-        }
-    ],
-    "funding": [
-        {
-            "type": "patreon",
-            "url": "https://www.patreon.com/mikopbx"
+            "role": "Developer (upstream MikoPBX ModuleMonitorActiveCalls)"
         }
     ],
     "config": {

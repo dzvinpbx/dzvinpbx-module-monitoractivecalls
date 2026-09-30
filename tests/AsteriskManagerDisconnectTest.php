@@ -3,7 +3,7 @@
 declare(strict_types=1);
 
 namespace {
-    require_once dirname(__DIR__, 3) . '/mikopbx/Core/vendor/autoload.php';
+    require_once dirname(__DIR__, 3) . '/dzvinpbx/Core/vendor/autoload.php';
     require_once dirname(__DIR__) . '/Lib/AsteriskManager.php';
 
     $sockets = stream_socket_pair(STREAM_PF_UNIX, STREAM_SOCK_STREAM, 0);
@@ -24,7 +24,7 @@ namespace {
     $manager = new \Modules\ModuleMonitorActiveCalls\Lib\AsteriskManager();
     $manager->socket = $workerSocket;
 
-    $loggedIn = new ReflectionProperty(\MikoPBX\Core\Asterisk\AsteriskManager::class, '_loggedIn');
+    $loggedIn = new ReflectionProperty(\DzvinPBX\Core\Asterisk\AsteriskManager::class, '_loggedIn');
     $loggedIn->setAccessible(true);
     $loggedIn->setValue($manager, true);
 

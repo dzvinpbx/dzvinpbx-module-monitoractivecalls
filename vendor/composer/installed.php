@@ -1,6 +1,6 @@
 <?php return array(
     'root' => array(
-        'name' => 'mikopbx/moduleamocrm',
+        'name' => 'dzvinpbx/moduleamocrm',
         'pretty_version' => 'dev-develop',
         'version' => 'dev-develop',
         'reference' => 'f1e41869d658e9dcc585262ab292118c924bff9e',
@@ -19,7 +19,7 @@
             'aliases' => array(),
             'dev_requirement' => false,
         ),
-        'mikopbx/moduleamocrm' => array(
+        'dzvinpbx/moduleamocrm' => array(
             'pretty_version' => 'dev-develop',
             'version' => 'dev-develop',
             'reference' => 'f1e41869d658e9dcc585262ab292118c924bff9e',

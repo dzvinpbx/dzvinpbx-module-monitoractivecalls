@@ -1,6 +1,6 @@
 <?php
 /*
- * MikoPBX - free phone system for small business
+ * Dzvin PBX - free phone system for small business
  * Copyright © 2017-2022 Alexey Portnov and Nikolay Beketov
  *
  * This program is free software: you can redistribute it and/or modify
@@ -21,9 +21,9 @@ namespace Modules\ModuleMonitorActiveCalls\Lib;
 
 use Cesargb\Log\Exceptions\RotationFailed;
 use Cesargb\Log\Rotation;
-use MikoPBX\Core\System\Directories;
-use MikoPBX\Core\System\SystemMessages;
-use MikoPBX\Core\System\Util;
+use DzvinPBX\Core\System\Directories;
+use DzvinPBX\Core\System\SystemMessages;
+use DzvinPBX\Core\System\Util;
 use Phalcon\Logger\Adapter\Stream;
 
 require_once('Globals.php');
@@ -68,7 +68,7 @@ class Logger
         }
         Util::addRegularWWWRights($this->logFile);
         $adapter = new Stream($this->logFile);
-        $loggerClass = MikoPBXVersion::getLoggerClass();
+        $loggerClass = DzvinPBXVersion::getLoggerClass();
         $this->logger = new $loggerClass(
             'messages',
             [

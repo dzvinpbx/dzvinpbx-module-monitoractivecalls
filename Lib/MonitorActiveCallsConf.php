@@ -9,9 +9,9 @@
 
 namespace Modules\ModuleMonitorActiveCalls\Lib;
 
-use MikoPBX\Core\System\Util;
-use MikoPBX\Core\Workers\Cron\WorkerSafeScriptsCore;
-use MikoPBX\Modules\Config\ConfigClass;
+use DzvinPBX\Core\System\Util;
+use DzvinPBX\Core\Workers\Cron\WorkerSafeScriptsCore;
+use DzvinPBX\Modules\Config\ConfigClass;
 use Modules\ModuleMonitorActiveCalls\bin\WorkerActiveCalls;
 use Modules\ModuleMonitorActiveCalls\bin\WorkerAmiActions;
 
@@ -20,7 +20,7 @@ class MonitorActiveCallsConf extends ConfigClass
     public const AMI_USER = 'monitor-active-calls';
 
     /**
-     * Receive information about mikopbx main database changes
+     * Receive information about dzvinpbx main database changes
      *
      * @param $data
      */
@@ -75,8 +75,8 @@ class MonitorActiveCallsConf extends ConfigClass
     public function createCronTasks(array &$tasks): void
     {
         $busyboxPath= Util::which('busybox');
-        $tasks[]    = "*/1 * * * * $busyboxPath find /storage/usbdisk*/mikopbx/tmp/SelectCdrService/ -mmin +1 -type f -delete> /dev/null 2>&1".PHP_EOL;
-        $tasks[]    = "*/1 * * * * $busyboxPath find /storage/usbdisk*/mikopbx/tmp/WorkerAmiActions/ -mmin +1 -type f -delete> /dev/null 2>&1".PHP_EOL;
+        $tasks[]    = "*/1 * * * * $busyboxPath find /storage/usbdisk*/dzvinpbx/tmp/SelectCdrService/ -mmin +1 -type f -delete> /dev/null 2>&1".PHP_EOL;
+        $tasks[]    = "*/1 * * * * $busyboxPath find /storage/usbdisk*/dzvinpbx/tmp/WorkerAmiActions/ -mmin +1 -type f -delete> /dev/null 2>&1".PHP_EOL;
 
         $phpPath   = Util::which('php');
         $tasks[]    = "*/1 * * * * $phpPath -f $this->moduleDir/bin/safe.php > /dev/null 2>&1".PHP_EOL;

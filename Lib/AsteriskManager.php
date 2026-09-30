@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Modules\ModuleMonitorActiveCalls\Lib;
 
-use MikoPBX\Core\Asterisk\AsteriskManager as CoreAsteriskManager;
+use DzvinPBX\Core\Asterisk\AsteriskManager as CoreAsteriskManager;
 
 if (method_exists(CoreAsteriskManager::class, 'isConnected')) {
     /**

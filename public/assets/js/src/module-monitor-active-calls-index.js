@@ -8,7 +8,7 @@
 const idUrl     = 'module-monitor-active-calls';
 const idForm    = 'module-monitor-active-calls-form';
 const className = 'ModuleMonitorActiveCalls';
-const inputClassName = 'mikopbx-module-input';
+const inputClassName = 'dzvinpbx-module-input';
 
 /* global $, globalRootUrl, globalTranslate, Form, Config, Vue, Extensions */
 const ModuleMonitorActiveCalls = {

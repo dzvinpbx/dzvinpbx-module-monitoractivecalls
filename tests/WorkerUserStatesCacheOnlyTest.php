@@ -1,7 +1,7 @@
 <?php
 declare(strict_types=1);
 
-namespace MikoPBX\Core\Workers {
+namespace DzvinPBX\Core\Workers {
     class WorkerBase {}
 }
 namespace Modules\ModuleMonitorActiveCalls\Lib {

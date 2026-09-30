@@ -1,6 +1,6 @@
 <?php
 /*
- * MikoPBX - free phone system for small business
+ * Dzvin PBX - free phone system for small business
  * Copyright © 2017-2023 Alexey Portnov and Nikolay Beketov
  *
  * This program is free software: you can redistribute it and/or modify
@@ -18,14 +18,14 @@
  */
 namespace Modules\ModuleMonitorActiveCalls\bin;
 
-use MikoPBX\Common\Models\CallQueueMembers;
-use MikoPBX\Common\Models\CallQueues;
-use MikoPBX\Common\Models\Extensions;
-use MikoPBX\Common\Models\PbxSettings;
-use MikoPBX\Core\System\SystemMessages;
+use DzvinPBX\Common\Models\CallQueueMembers;
+use DzvinPBX\Common\Models\CallQueues;
+use DzvinPBX\Common\Models\Extensions;
+use DzvinPBX\Common\Models\PbxSettings;
+use DzvinPBX\Core\System\SystemMessages;
 use Modules\ModuleMonitorActiveCalls\Lib\AsteriskManager as CustomAsteriskManager;
-use MikoPBX\Core\Workers\WorkerBase;
-use MikoPBX\Core\System\Util;
+use DzvinPBX\Core\Workers\WorkerBase;
+use DzvinPBX\Core\System\Util;
 use Modules\ModuleMonitorActiveCalls\Lib\ActiveCallProjector;
 use Modules\ModuleMonitorActiveCalls\Lib\CacheManager;
 use Modules\ModuleMonitorActiveCalls\Lib\EndpointStateResolver;
@@ -1112,7 +1112,7 @@ class WorkerActiveCalls extends WorkerBase
                             'type'     => $callType,
                             'src_chan' => $channel,
                             'did'      => $did,
-                            'time'     => str_replace('mikopbx-','',$chanData['Uniqueid']),
+                            'time'     => str_replace('dzvinpbx-','',$chanData['Uniqueid']),
                             'answer'   => strtotime($this->amCustom->GetVar($channel, 'CDR(answer)','', false))
                         ];
                     }
@@ -1133,7 +1133,7 @@ class WorkerActiveCalls extends WorkerBase
                             'type'     => $callType,
                             'src_chan' => $channel,
                             'did'      => $did,
-                            'time'     => str_replace('mikopbx-','',$chanData['Uniqueid']),
+                            'time'     => str_replace('dzvinpbx-','',$chanData['Uniqueid']),
                             'answer'   => strtotime($this->amCustom->GetVar($channel, 'CDR(answer)','', false))
                         ];
                     }
@@ -1468,7 +1468,7 @@ class WorkerActiveCalls extends WorkerBase
                     'type'      => $callType,
                     'src_chan'  => $channel,
                     'did'       => $did,
-                    'time'     => str_replace('mikopbx-','',$chanData['Uniqueid'])
+                    'time'     => str_replace('dzvinpbx-','',$chanData['Uniqueid'])
                 ];
             }
 

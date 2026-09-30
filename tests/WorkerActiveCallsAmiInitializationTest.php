@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace MikoPBX\Core\Workers {
+namespace DzvinPBX\Core\Workers {
     class WorkerBase
     {
         protected bool $needRestart = false;
@@ -10,7 +10,7 @@ namespace MikoPBX\Core\Workers {
     }
 }
 
-namespace MikoPBX\Common\Models {
+namespace DzvinPBX\Common\Models {
     class PbxSettings { public static function getValueByKey(string $key): string { return '5038'; } }
 }
 

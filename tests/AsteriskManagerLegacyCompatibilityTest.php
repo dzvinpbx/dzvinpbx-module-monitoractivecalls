@@ -2,13 +2,13 @@
 
 declare(strict_types=1);
 
-namespace MikoPBX\Core\Asterisk {
+namespace DzvinPBX\Core\Asterisk {
     class AsteriskManager
     {
     }
 }
 
-namespace MikoPBX\Core\System {
+namespace DzvinPBX\Core\System {
     final class Processes
     {
         public static function mwExec(string $command): int
